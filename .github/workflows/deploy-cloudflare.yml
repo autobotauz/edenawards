@@ -1,0 +1,44 @@
+# Optional: deploy to Cloudflare Workers + D1. Run manually from the Actions tab.
+# Requires repository secrets CLOUDFLARE_API_TOKEN (scoped: Workers Scripts:Edit,
+# D1:Edit, Account Settings:Read) and CLOUDFLARE_ACCOUNT_ID. See docs/DEPLOYMENT.md.
+name: Deploy to Cloudflare
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        type: choice
+        options: [preview, production]
+        default: preview
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - name: Apply D1 migrations
+        run: npx wrangler d1 migrations apply ${{ inputs.environment == 'production' && 'eden-awards' || 'eden-awards-preview' }} --remote ${{ inputs.environment == 'preview' && '--env preview' || '' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Deploy Worker
+        run: npx wrangler deploy ${{ inputs.environment == 'preview' && '--env preview' || '' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

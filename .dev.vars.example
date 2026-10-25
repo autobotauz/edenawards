@@ -1,0 +1,9 @@
+# Copy to .dev.vars for `npm run cf:dev` (Wrangler local mode). Never commit .dev.vars.
+APP_ORIGIN=http://localhost:8788
+ADMIN_DISCORD_IDS=100000000000000001
+DEV_LOGIN=true
+DISCORD_CLIENT_ID=
+DISCORD_CLIENT_SECRET=
+YOUTUBE_API_KEY=
+TWITCH_CLIENT_ID=
+TWITCH_CLIENT_SECRET=

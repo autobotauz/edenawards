@@ -1,0 +1,143 @@
+@import 'tailwindcss';
+@import '@fontsource/cinzel/500.css';
+@import '@fontsource/cinzel/700.css';
+@import '@fontsource/alegreya-sans/400.css';
+@import '@fontsource/alegreya-sans/400-italic.css';
+@import '@fontsource/alegreya-sans/500.css';
+@import '@fontsource/alegreya-sans/700.css';
+
+@theme {
+  --color-night: #151a2c;
+  --color-night-deep: #0e1220;
+  --color-keep: #1f2539;
+  --color-keep-raised: #283049;
+  --color-rim: #39425f;
+  --color-parchment: #ecdfc4;
+  --color-parchment-dim: #b9ae97;
+  --color-mist: #8f93a8;
+  --color-gold: #c9a24a;
+  --color-gold-bright: #e3c06a;
+  --color-gold-deep: #8a6b26;
+  --color-albion: #a83a3a;
+  --color-hibernia: #3d8a58;
+  --color-midgard: #3a68a8;
+  --color-ok: #6fbf8a;
+  --color-warn: #e0a84a;
+  --color-danger: #e07070;
+
+  --font-display: 'Cinzel', 'Times New Roman', serif;
+  --font-sans: 'Alegreya Sans', 'Segoe UI', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-night);
+  }
+  body {
+    @apply bg-night text-parchment font-sans antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(1200px 500px at 15% -10%, rgb(58 104 168 / 0.12), transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, rgb(201 162 74 / 0.08), transparent 60%);
+    background-attachment: fixed;
+  }
+  h1, h2, h3 {
+    @apply font-display text-parchment;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold-bright);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: rgb(201 162 74 / 0.35);
+  }
+  a {
+    @apply text-gold-bright underline-offset-4;
+  }
+  a:hover {
+    @apply underline;
+  }
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 font-medium no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-50;
+  &:hover {
+    text-decoration: none;
+  }
+}
+@utility btn-gold {
+  @apply btn bg-gold text-night-deep hover:bg-gold-bright;
+}
+@utility btn-ghost {
+  @apply btn border border-rim text-parchment hover:border-gold hover:text-gold-bright;
+}
+@utility btn-danger {
+  @apply btn border border-danger/60 text-danger hover:bg-danger/10;
+}
+@utility panel {
+  @apply rounded-lg border border-rim/70 bg-keep;
+}
+@utility field {
+  @apply w-full rounded-md border border-rim bg-night-deep px-3 py-2 text-parchment placeholder:text-mist focus:border-gold focus:outline-none disabled:opacity-60;
+}
+@utility label {
+  @apply mb-1 block font-medium text-parchment;
+}
+@utility hint {
+  @apply mt-1 text-sm text-mist;
+}
+@utility error-text {
+  @apply mt-1 text-sm text-danger;
+}
+/* Heraldic tricolour: Albion, Hibernia, Midgard. */
+@utility realm-rule {
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-albion) 0 33.33%, var(--color-hibernia) 33.33% 66.66%, var(--color-midgard) 66.66%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Presentation mode: the one orchestrated motion moment on the site. */
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(2vh);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes reveal-place {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+    filter: brightness(2);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+.reveal-in {
+  animation: reveal-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.reveal-place {
+  animation: reveal-place 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}

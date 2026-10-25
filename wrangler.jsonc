@@ -1,0 +1,52 @@
+// Cloudflare Workers deployment (alternative to Node hosting). See docs/DEPLOYMENT.md.
+// Secrets (DISCORD_CLIENT_SECRET, YOUTUBE_API_KEY, TWITCH_CLIENT_SECRET) are set with
+// `wrangler secret put` — never in this file.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "eden-awards",
+  "main": "server/worker.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "dist/client",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "eden-awards",
+      // Replace with the ID printed by `wrangler d1 create eden-awards`.
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "APP_ORIGIN": "https://eden-awards.com",
+    "ADMIN_DISCORD_IDS": "",
+    "DISCORD_CLIENT_ID": "",
+    "DEV_LOGIN": "false"
+  },
+  "observability": { "enabled": true },
+  "env": {
+    "preview": {
+      "name": "eden-awards-preview",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "eden-awards-preview",
+          // Replace with the ID printed by `wrangler d1 create eden-awards-preview`.
+          "database_id": "00000000-0000-0000-0000-000000000000",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "vars": {
+        "APP_ORIGIN": "https://eden-awards-preview.YOUR-SUBDOMAIN.workers.dev",
+        "ADMIN_DISCORD_IDS": "",
+        "DISCORD_CLIENT_ID": "",
+        "DEV_LOGIN": "false"
+      }
+    }
+  }
+}

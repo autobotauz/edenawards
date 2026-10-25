@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+data/
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-*
+*.db
+e2e/screenshots/
+seed/*.sql
+backups/
